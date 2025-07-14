@@ -41,3 +41,39 @@ func CreateConsultorio(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{"message": "Consultorio creado"})
 }
+
+func UpdateConsultorio(c *fiber.Ctx) error {
+	id := c.Params("id")
+	var cs models.Consultorio
+
+	if err := c.BodyParser(&cs); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Datos inválidos"})
+	}
+
+	_, err := config.DB.Exec(context.Background(),
+		`UPDATE consultorios 
+		SET tipo = $1, ubicacion = $2, nombre = $3, id_medico = $4 
+		WHERE id_consultorio = $5`,
+		cs.Tipo, cs.Ubicacion, cs.Nombre, cs.IdMedico, id)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Error al actualizar consultorio"})
+	}
+
+	return c.JSON(fiber.Map{"message": "Consultorio actualizado correctamente"})
+}
+
+
+func DeleteConsultorio(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	_, err := config.DB.Exec(context.Background(),
+		"DELETE FROM consultorios WHERE id_consultorio = $1", id)
+
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Error al eliminar consultorio"})
+	}
+
+	return c.JSON(fiber.Map{"message": "Consultorio eliminado correctamente"})
+}
+

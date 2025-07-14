@@ -14,3 +14,14 @@ func GetUsuarios(c *fiber.Ctx) error {
 func CreateUsuario(c *fiber.Ctx) error {
 	return controllers.CreateUsuario(c)
 }
+
+// DELETE /api/usuarios/:id
+func DeleteUsuario(c *fiber.Ctx) error {
+	return controllers.DeleteUsuario(c)
+}
+
+func UpdateUsuario(c *fiber.Ctx) error {
+	return controllers.UpdateUsuario(c)
+}
+
+
